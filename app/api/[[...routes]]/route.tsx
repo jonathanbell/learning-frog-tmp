@@ -1,111 +1,64 @@
 /** @jsxImportSource frog/jsx */
 
-import { Button, Frog, TextInput } from 'frog'
-import { devtools } from 'frog/dev'
-// import { neynar } from 'frog/hubs'
-import { handle } from 'frog/next'
-import { serveStatic } from 'frog/serve-static'
+import { Button, Frog } from "frog";
+import { devtools } from "frog/dev";
+import { handle } from "frog/next";
+import { serveStatic } from "frog/serve-static";
 
 const app = new Frog({
-  assetsPath: '/',
-  basePath: '/api',
-  // Supply a Hub to enable frame verification.
-  // hub: neynar({ apiKey: 'NEYNAR_FROG_FM' })
-  title: 'Frog Frame',
-})
+  assetsPath: "/",
+  basePath: "/api",
+  title: "Creators of Farcast",
+});
 
-// Uncomment to use Edge Runtime
-// export const runtime = 'edge'
+type Creator = {
+  name: string;
+  image: string;
+  link: string;
+};
 
-app.frame('/', (context) => {
-  const { buttonValue, inputText, status } = context
-  const fruit = inputText || buttonValue
-  return context.res({
-    action: '/second',
-    image: (
-      <div
-        style={{
-          alignItems: 'center',
-          background:
-            status === 'response'
-              ? 'linear-gradient(to right, #432889, #17101F)'
-              : 'black',
-          backgroundSize: '100% 100%',
-          display: 'flex',
-          flexDirection: 'column',
-          flexWrap: 'nowrap',
-          height: '100%',
-          justifyContent: 'center',
-          textAlign: 'center',
-          width: '100%',
-        }}
-      >
-        <div
-          style={{
-            color: 'white',
-            fontSize: 60,
-            fontStyle: 'normal',
-            letterSpacing: '-0.025em',
-            lineHeight: 1.4,
-            marginTop: 30,
-            padding: '0 120px',
-            whiteSpace: 'pre-wrap',
-          }}
-        >
-          {status === 'response'
-            ? `Nice choice.${fruit ? ` ${fruit.toUpperCase()}!!` : ''}`
-            : 'Welcome!'}
-        </div>
-      </div>
-    ),
-    intents: [
-      <Button>run the action</Button>,
-      // <TextInput placeholder="Enter custom fruit..." />,
-      // <Button value="apples">Apples</Button>,
-      // <Button value="oranges">Oranges</Button>,
-      // <Button value="bananas">Bananas</Button>,
-      // <Button.Link href='https://jonathanbell.ca'>My Link</Button.Link>,
-      // status === 'response' && <Button.Reset>Reset</Button.Reset>,
-    ],
-  })
-})
+const creators = [
+  {
+    name: "Jonathan Bell",
+    image: "https://www.jonathanbell.ca/pictures/_MG_3954-Edit.jpg",
+    link: "https://jonathanbell.ca",
+  },
+  {
+    name: "John Doe",
+    image:
+      "https://media.istockphoto.com/id/2065674519/photo/rolling-says-macro.jpg?s=2048x2048&w=is&k=20&c=FO-u3p_njEoIh7GusFYgrOo1RxF0EXobx0BXH6vMB4Q=",
+    link: "https://cats.com/",
+  },
+  {
+    name: "Jane Doe",
+    image:
+      "https://cats.com/wp-content/uploads/2024/08/Red-Point-Siamese-Cats-540x360.jpg",
+    link: "https://dogs.com/",
+  },
+  {
+    name: "John Smith",
+    image:
+      "https://d3ftabzjnxfdg6.cloudfront.net/app/uploads/2021/07/4-Winds_6774-web-1024x658.jpg",
+    link: "https://foo.com/",
+  },
+];
 
-app.frame('/second', (context) => {
-  return context.res({
-    image: (
-      <div style={{
-        color: 'white',
-        fontSize: 60,
-        fontStyle: 'normal',
-        letterSpacing: '-0.025em',
-        lineHeight: 1.4,
-        marginTop: 30,
-        padding: '0 120px',
-      }}>
-          secibd frane
-      </div>
-    ),
-    intents: [
-      <Button>run the action</Button>,
-    ],
-  })
-})
+creators.forEach((creator: Creator, index, array) => {
+  app.frame(`/${index === 0 ? "" : index}`, (context) => {
+    return context.res({
+      action: `/${index === array.length - 1 ? "" : index + 1}`,
+      image: <img src={creator.image} alt={creator.name} />,
+      intents: [
+        <Button.Link href={creator.link}>{`${creator.name}`}</Button.Link>,
+        <Button>
+          👀 Next: {creators[index === array.length - 1 ? 0 : index + 1].name}
+        </Button>,
+      ],
+    });
+  });
+});
 
-devtools(app, { serveStatic })
+devtools(app, { serveStatic });
 
-export const GET = handle(app)
-export const POST = handle(app)
-
-// NOTE: That if you are using the devtools and enable Edge Runtime, you will need to copy the devtools
-// static assets to the public folder. You can do this by adding a script to your package.json:
-// ```json
-// {
-//   scripts: {
-//     "copy-static": "cp -r ./node_modules/frog/_lib/ui/.frog ./public/.frog"
-//   }
-// }
-// ```
-// Next, you'll want to set up the devtools to use the correct assets path:
-// ```ts
-// devtools(app, { assetsPath: '/.frog' })
-// ```
+export const GET = handle(app);
+export const POST = handle(app);
