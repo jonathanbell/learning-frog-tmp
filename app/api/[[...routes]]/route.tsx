@@ -13,6 +13,7 @@ const app = new Frog({
 
 type Creator = {
   name: string;
+  emoji: string;
   image: string;
   link: string;
 };
@@ -20,26 +21,30 @@ type Creator = {
 const creators = [
   {
     name: "Jonathan Bell",
+    emoji: "👨‍💻",
     image: "https://www.jonathanbell.ca/pictures/_MG_3954-Edit.jpg",
     link: "https://jonathanbell.ca",
   },
   {
     name: "John Doe",
+    emoji: "👨‍🎨",
     image:
       "https://media.istockphoto.com/id/2065674519/photo/rolling-says-macro.jpg?s=2048x2048&w=is&k=20&c=FO-u3p_njEoIh7GusFYgrOo1RxF0EXobx0BXH6vMB4Q=",
     link: "https://cats.com/",
   },
   {
     name: "Jane Doe",
+    emoji: "👩",
     image:
       "https://cats.com/wp-content/uploads/2024/08/Red-Point-Siamese-Cats-540x360.jpg",
-    link: "https://dogs.com/",
+    link: "https://google.com/",
   },
   {
     name: "John Smith",
+    emoji: "👷‍♂️",
     image:
       "https://d3ftabzjnxfdg6.cloudfront.net/app/uploads/2021/07/4-Winds_6774-web-1024x658.jpg",
-    link: "https://foo.com/",
+    link: "https://frontend.com/",
   },
 ];
 
@@ -51,7 +56,8 @@ creators.forEach((creator: Creator, index, array) => {
       intents: [
         <Button.Link href={creator.link}>{`${creator.name}`}</Button.Link>,
         <Button>
-          👀 Next: {creators[index === array.length - 1 ? 0 : index + 1].name}
+          Next: {creators[index === array.length - 1 ? 0 : index + 1].emoji}{" "}
+          {creators[index === array.length - 1 ? 0 : index + 1].name}
         </Button>,
       ],
     });
